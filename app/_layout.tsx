@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { store } from '@/src/redux/store'
 import tw from "twrnc"
 import { isWeb } from '@/src/utils/checkPlatform';
+import '@/src/locales/initI18n';
 
 export default function AppLayout() {
 
@@ -33,8 +34,9 @@ export default function AppLayout() {
               }}
             />
             <Tabs.Screen
-              name="about"
+              name="account"
               options={{
+                tabBarLabel: "Sign In",
                 tabBarIcon: ({ color, size }) => (
                   <Icon_Gear fill={color} />
                 ),

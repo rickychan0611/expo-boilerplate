@@ -29,7 +29,8 @@
     },
     "scheme": "your-app-scheme",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-localization"
     ]
   }
 }
