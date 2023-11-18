@@ -15,7 +15,7 @@ export default function AppLayout() {
   return (
     <Provider store={store}>
       <View style={tw`flex-1 pt-${insets.top || 1}px justify-center items-center ${isWeb ? "bg-stone-200" : "bg-white"}`}>
-        <View style={tw`h-full w-full max-w-[1000px] bg-white`}>
+        <View style={tw`h-full w-full max-w-[480px] bg-white`}>
           <Tabs screenOptions={{ headerShown: false }}>
             <Tabs.Screen
               name="index"
