@@ -18,8 +18,8 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { HOST_URL } from '@/env';
 import avatar from '@/assets/avatar.jpg'
 import { router } from 'expo-router';
-import Language from '../Layout/Language';
-import LoadingModal from '../Layout/LoadingModal';
+import Language from './Language';
+import LoadingModal from './LoadingModal';
 // import useCheckLoginAndRedirect from '@/src/hooks/useCheckLoginAndRedirect';
 
 const AppBar = () => {

@@ -1,5 +1,5 @@
 import { shopAPI } from '@/src/api/shopAPI';
-import LoadingModal from '@/src/components/Layout/LoadingModal';
+import LoadingModal from '@/src/components/UI/LoadingModal';
 import { M18, R14 } from '@/src/components/Elements/FontStyles';
 import { Product } from '@/src/interfaces/shopInterface';
 import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
