@@ -51,6 +51,7 @@ import XCircle from '@/assets/bootstrip_icons/x-circle.svg'
 import Sliders from '@/assets/bootstrip_icons/sliders.svg'
 import Tags from '@/assets/bootstrip_icons/tags.svg'
 import Hash from '@/assets/bootstrip_icons/hash.svg'
+import Dash_Circle from '@/assets/bootstrip_icons/dash-circle.svg'
 
 
 export const Icon_CartX = CartX
@@ -105,3 +106,4 @@ export const Icon_XCircle = XCircle
 export const Icon_Sliders = Sliders
 export const Icon_Tags = Tags
 export const Icon_Hash = Hash
+export const Icon_Dash_Circle = Dash_Circle 

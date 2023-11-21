@@ -14,7 +14,7 @@ import { router } from 'expo-router';
 
 // styles
 import tw from "twrnc"
-import { R14, R16, R18 } from '@/src/components/UI/FontStyles';
+import { R14, R16, R18 } from '@/src/components/Elements/FontStyles';
 import { pixelSizeHorizontal, pixelSizeVertical } from '@/src/utils/pixelCalculation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/src/constants/colors';

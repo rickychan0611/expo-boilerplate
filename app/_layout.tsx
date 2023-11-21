@@ -1,5 +1,5 @@
 import '@/src/locales/initI18n';
-import { Icon_Gear, Icon_House } from '@/src/components/UI/Icons';
+import { Icon_Gear, Icon_House } from '@/src/components/Elements/Icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Tabs } from 'expo-router/tabs';
 import { View } from 'react-native';

@@ -32,7 +32,7 @@ import tw from "twrnc"
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Logo from '@/assets/Logo-PeacefulMall-circle.svg'
-import { H5, R14, R16, R18, R20 } from '@/src/components/UI/FontStyles';
+import { H5, R14, R16, R18, R20 } from '@/src/components/Elements/FontStyles';
 import { pixelSizeHorizontal, pixelSizeVertical } from '@/src/utils/pixelCalculation';
 import { colors } from '@/src/constants/colors';
 
