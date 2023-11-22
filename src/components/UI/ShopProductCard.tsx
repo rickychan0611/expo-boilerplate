@@ -113,7 +113,7 @@ const ShopProductCard = ({ product }: any) => {
         onPress={() => setOpenProduct(true)} >
 
         {product?.images && <Image source={{ uri: HOST_URL + '/storage/' + JSON.parse((product?.images || " ") + "")[0] }}
-          style={tw`w-[60px] h-[60px]`}
+          style={tw`w-[60px] h-[60px] rounded`}
           resizeMode="cover"
         />}
 

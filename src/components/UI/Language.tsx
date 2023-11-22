@@ -43,10 +43,10 @@ function Language({ setOpen }: any) {
             <Text style={tw`text-[${colors.text}]`}>中文</Text>
             {i18n.language === "cn" && <AntDesign name="check" size={20} color={colors.text} />}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleLanguageChange("ko")} style={tw`border-b border-[${colors.neutral90}] p-4 flex-row justify-between items-center`}>
+          {/* <TouchableOpacity onPress={() => handleLanguageChange("ko")} style={tw`border-b border-[${colors.neutral90}] p-4 flex-row justify-between items-center`}>
             <Text style={tw`text-[${colors.text}]`}>한국인</Text>
             {i18n.language === "ko" && <AntDesign name="check" size={20} color={colors.text} />}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </View>
     </Pressable>

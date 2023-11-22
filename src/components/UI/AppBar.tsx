@@ -91,23 +91,6 @@ const AppBar = () => {
             </View>}
           </TouchableOpacity>
 
-          {/* {router.name !== "AuthRouter" && */}
-          <TouchableOpacity
-            style={tw`z-50`}
-            onPress={() => {
-              // if (isLoggedIn()) {
-              //   navigation.navigate("AccountRouter",
-              //     { screen: "UserAccountIndex", params: { origin: route.name } })
-              // }
-            }}
-          >
-            <Image
-              style={tw`w-9 h-9 rounded-full ml-2`}
-              source={userInfo?.avatar ? { uri: HOST_URL + "/storage/" + userInfo?.avatar } : avatar}
-            />
-          </TouchableOpacity>
-          {/* } */}
-
         </View>
 
       </View >

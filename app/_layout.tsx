@@ -1,5 +1,5 @@
+import { useCallback, useEffect, useState } from 'react';
 import '@/src/locales/initI18n';
-import { Icon_Gear, Icon_House } from '@/src/components/Elements/Icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Tabs } from 'expo-router/tabs';
 import { View } from 'react-native';
@@ -9,10 +9,15 @@ import tw from "twrnc"
 import { isWeb } from '@/src/utils/checkPlatform';
 import AppBar from '@/src/components/UI/AppBar';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import CartIcon from '@/assets/cart.svg';
+import UserIcon from '@/assets/user.svg';
+import CategoryIcon from '@/assets/category.svg';
+import HistoryIcon from '@/assets/history.svg';
+import { colors } from '@/src/constants/colors';
+import { useTranslation } from 'react-i18next';
 
 export default function AppLayout() {
-
+  const { t } = useTranslation("common")
   const [appIsReady, setAppIsReady] = useState(false);
   const insets = useSafeAreaInsets();
   const onLayoutRootView = useCallback(async () => {
@@ -55,25 +60,40 @@ export default function AppLayout() {
             <Tabs.Screen
               name="index"
               options={{
+                tabBarLabel: t`Recent`,
+                tabBarActiveTintColor: colors.primary,
                 tabBarIcon: ({ color, size }) => (
-                  <Icon_House fill={color} />
+                  <HistoryIcon fill={color} />
                 ),
               }}
             />
             <Tabs.Screen
-              name="home"
+              name="categories"
               options={{
+                tabBarLabel: t`Categories`,
+                tabBarActiveTintColor: colors.primary,
                 tabBarIcon: ({ color, size }) => (
-                  <Icon_House fill={color} />
+                  <CategoryIcon fill={color} />
+                ),
+              }}
+            />
+            <Tabs.Screen
+              name="cart"
+              options={{
+                tabBarLabel: t`Cart`,
+                tabBarActiveTintColor: colors.primary,
+                tabBarIcon: ({ color, size }) => (
+                  <CartIcon fill={color} />
                 ),
               }}
             />
             <Tabs.Screen
               name="account"
               options={{
-                tabBarLabel: "Sign In",
+                tabBarLabel: t`Sign In`,
+                tabBarActiveTintColor: colors.primary,
                 tabBarIcon: ({ color, size }) => (
-                  <Icon_Gear fill={color} />
+                  <UserIcon fill={color} />
                 ),
               }}
             />

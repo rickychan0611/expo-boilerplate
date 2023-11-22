@@ -133,7 +133,6 @@ function ProductModal({ item, open, setOpen }: any) {
             {/* divider */}
             {/* <View style={tw`bg-[${colors.neutral95}] h-2 my-[24]`} /> */}
 
-
             {/* divider */}
             {JSON.parse(item?.description_images)[0] && <>
               <View style={tw`bg-[${colors.neutral95}] h-2 my-[24]`} />

@@ -22,8 +22,8 @@ import { initReactI18next } from "react-i18next";
 import { getLocales } from "expo-localization";
 
 // Import all the languages you want here
-import en from "./en/translation.json";
-import cn from "./cn/translation.json";
+import en from "./en/common.json";
+import cn from "./cn/common.json";
 import en_userAuth from "./en/userAuth.json";
 import cn_userAuth from "./cn/userAuth.json";
 
@@ -31,11 +31,11 @@ i18n.use(initReactI18next).init({
   // Add any imported languages here
   resources: {
     en: {
-      translation: en,
+      common: en,
       userAuth: en_userAuth
     },
     cn: {
-      translation: cn,
+      common: cn,
       userAuth: cn_userAuth
     }
   },
