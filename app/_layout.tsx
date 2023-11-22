@@ -15,6 +15,7 @@ import CategoryIcon from '@/assets/category.svg';
 import HistoryIcon from '@/assets/history.svg';
 import { colors } from '@/src/constants/colors';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/src/redux/hooks';
 
 export default function AppLayout() {
   const { t } = useTranslation("common")
@@ -49,6 +50,67 @@ export default function AppLayout() {
     prepare();
   }, []);
 
+  const TabScreens = () => {
+    const userInfo = useAppSelector(state => state.user.userInfo)
+
+    return (
+      <Tabs screenOptions={{ headerShown: false }}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            tabBarLabel: t`Recent`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <HistoryIcon fill={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="categories"
+          options={{
+            tabBarLabel: t`Categories`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <CategoryIcon fill={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="cart"
+          options={{
+            tabBarLabel: t`Cart`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <CartIcon fill={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="sign-in"
+          options={{
+            href: !userInfo ? null : "/sign-in",
+            tabBarLabel: t`Sign In`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <UserIcon fill={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="account"
+          options={{
+            href: userInfo ? null : "/account",
+            tabBarLabel: t`Account`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <UserIcon fill={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    )
+  }
+
   return (
     <Provider store={store}>
       <View style={tw`flex-1 pt-${insets.top || 1}px justify-center items-center ${isWeb ? "bg-stone-200" : "bg-white"}`}
@@ -56,54 +118,7 @@ export default function AppLayout() {
       >
         <View style={tw`h-full w-full max-w-[480px] bg-white`}>
           <AppBar />
-          <Tabs screenOptions={{ headerShown: false }}>
-            <Tabs.Screen
-              name="index"
-              options={{
-                tabBarLabel: t`Recent`,
-                tabBarActiveTintColor: colors.primary,
-                tabBarIcon: ({ color, size }) => (
-                  <HistoryIcon fill={color} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="categories"
-              options={{
-                tabBarLabel: t`Categories`,
-                tabBarActiveTintColor: colors.primary,
-                tabBarIcon: ({ color, size }) => (
-                  <CategoryIcon fill={color} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="cart"
-              options={{
-                tabBarLabel: t`Cart`,
-                tabBarActiveTintColor: colors.primary,
-                tabBarIcon: ({ color, size }) => (
-                  <CartIcon fill={color} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="account"
-              options={{
-                tabBarLabel: t`Sign In`,
-                tabBarActiveTintColor: colors.primary,
-                tabBarIcon: ({ color, size }) => (
-                  <UserIcon fill={color} />
-                ),
-              }}
-            />
-            {/* <Tabs.Screen
-              name="language"
-              options={{
-                href: null,
-              }}
-            /> */}
-          </Tabs>
+          <TabScreens />
         </View>
       </View>
     </Provider>
