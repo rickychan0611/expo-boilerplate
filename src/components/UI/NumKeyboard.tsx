@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { View, Modal, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import tw from "twrnc"
 
-function NumKeyboard({ open, setOpen, setQty, qty }: any) {
+function NumKeyboard({ open, setOpen, setQty, qty, addItem }: any) {
 
   const [num, setNum] = useState<string>(qty + "")
 
@@ -15,6 +15,7 @@ function NumKeyboard({ open, setOpen, setQty, qty }: any) {
     } else if (key === 'done') {
       setQty(+num)
       setOpen(false)
+      addItem(+num || 0, +num || 0)
     } else {
       if (key === '0' && num === "" || num.length === 6) return
       setNum((prevNumber: string) => prevNumber + key);
