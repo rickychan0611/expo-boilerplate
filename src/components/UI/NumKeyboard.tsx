@@ -1,21 +1,29 @@
 import { colors } from '@/src/constants/colors';
+import { useEffect, useState } from 'react';
 import { View, Modal, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import tw from "twrnc"
 
 function NumKeyboard({ open, setOpen, setQty, qty }: any) {
 
+  const [num, setNum] = useState<string>(qty + "")
+
   const handleKeyPress = (key: string) => {
     if (key === 'backspace') {
-      qty.length && setQty((prevNumber: string) => prevNumber.slice(0, -1));
+      num.length && setNum((prevNumber: string) => prevNumber.slice(0, -1));
     } else if (key === 'cancel') {
-      setQty('');
+      setNum('');
     } else if (key === 'done') {
+      setQty(+num)
       setOpen(false)
     } else {
-      if (key === '0' && qty === "" || qty.length === 6) return
-      setQty((prevNumber: string) => prevNumber + key);
+      if (key === '0' && num === "" || num.length === 6) return
+      setNum((prevNumber: string) => prevNumber + key);
     }
   };
+
+  useEffect(() => {
+    setNum(qty + "")
+  }, [qty])
 
   return (
     <Modal
@@ -24,9 +32,9 @@ function NumKeyboard({ open, setOpen, setQty, qty }: any) {
       transparent={true}
     >
       <View style={tw`flex-1 bg-[rgba(0,0,0,.3)] flex justify-center items-center p-4`}>
-        <View style={tw`w-full bg-white rounded`}>
+        <View style={tw`w-full bg-white rounded max-w-[440px]`}>
           <View style={tw`h-[70px] rounded-t bg-gray-100 text-right px-6 justify-center items-end`}>
-            <Text style={tw`text-2xl`}>{qty}</Text>
+            <Text style={tw`text-2xl`}>{num || 0}</Text>
           </View>
 
           <View style={styles.row}>

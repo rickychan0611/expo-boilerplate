@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
-import { setOrderItems } from '@/src/redux/slice/shopSlice'
+import { setShopOrderItems } from '@/src/redux/slice/shopSlice'
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
@@ -10,12 +10,13 @@ import PressableOpacity from '../Elements/PressableOpacity';
 import { colors } from '@/src/constants/colors';
 import { HOST_URL } from '@/env';
 import NumKeyboard from './NumKeyboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ShopProductCard = ({ product }: any) => {
 
   const { t, i18n } = useTranslation();
   const [qty, setQty] = useState(0);
-  const orderItems = useAppSelector(state => state.shop.orderItems)
+  const shopOrderItems = useAppSelector(state => state.shop.shopOrderItems)
   const dispatch = useAppDispatch()
   const [openKeyboard, setOpenKeyboard] = useState<boolean>(false)
 
@@ -34,14 +35,14 @@ const ShopProductCard = ({ product }: any) => {
       }
     }
 
-    let orderCopy = JSON.parse(JSON.stringify(orderItems))
+    let orderCopy = JSON.parse(JSON.stringify(shopOrderItems))
     //if cart is not empty
-    if (Object.keys(orderItems)[0]) {
+    if (Object.keys(shopOrderItems)[0]) {
       // check if shop exists
-      const shopKeys = Object.keys(orderItems)
+      const shopKeys = Object.keys(shopOrderItems)
       if (shopKeys.includes(product?.shop.id + "")) {
 
-        const itemKeys: any = Object.keys(orderItems[product?.shop?.id + ""])
+        const itemKeys: any = Object.keys(shopOrderItems[product?.shop?.id + ""])
 
         // check if same item exists
         if (itemKeys.includes(product?.id + "")) {
@@ -52,39 +53,39 @@ const ShopProductCard = ({ product }: any) => {
             if (!Object.keys(orderCopy[product?.shop?.id + ""]).length) {
               delete orderCopy[product?.shop?.id + ""]
             }
-            dispatch(setOrderItems(orderCopy))
+            dispatch(setShopOrderItems(orderCopy))
             return
           }
           orderCopy[product?.shop?.id + ""][product?.id + ""].quantity = +orderCopy[product?.shop?.id + ""][product?.id + ""].quantity + plusOrMinus
-          dispatch(setOrderItems(orderCopy))
+          dispatch(setShopOrderItems(orderCopy))
 
         }
         //shop found. item not found. add item to the shop
         else {
 
           orderCopy[product?.shop?.id + ""][product?.id + ""] = newOrder[product?.shop?.id + ""][product?.id + ""]
-          dispatch(setOrderItems(orderCopy))
+          dispatch(setShopOrderItems(orderCopy))
         }
       }
       //shop not found. add newOrder
       else {
 
         orderCopy[product?.shop?.id + ""] = newOrder[product?.shop?.id + ""]
-        dispatch(setOrderItems(orderCopy))
+        dispatch(setShopOrderItems(orderCopy))
       }
     }
     else {
       //shop not found. add newOrder
 
-      dispatch(setOrderItems(newOrder))
+      dispatch(setShopOrderItems(newOrder))
     }
 
-    await localStorage.setItem("createdShopOrder", JSON.stringify(""))
+    await AsyncStorage.setItem("createdShopOrder", JSON.stringify(""))
 
   };
 
   useEffect(() => {
-    setQty(orderItems?.[product.shop.id]?.[product?.id || 0]?.quantity || 0)
+    setQty(shopOrderItems?.[product.shop.id]?.[product?.id || 0]?.quantity || 0)
   }, [])
 
   return (

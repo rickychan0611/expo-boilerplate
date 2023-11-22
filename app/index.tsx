@@ -18,7 +18,7 @@ export default function Root() {
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>([])
-  const orderItems = useAppSelector(state => state.shop.orderItems)
+  const shopOrderItems = useAppSelector(state => state.shop.shopOrderItems)
   const [isLastPage, setIsLastPage] = useState(false);
   const [page, setPage] = useState(1);
 
