@@ -59,7 +59,6 @@ export default function Root() {
           temp = [...data, ...res.data.data]
         }
 
-        console.log(page, "res.data.data", temp)
         setData(temp)
         setPage(page + 1)
       }

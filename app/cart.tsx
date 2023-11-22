@@ -18,6 +18,7 @@ import CartCheckoutBar from '@/src/components/UI/CartCheckoutBar'
 import { ShopProduct } from '@/src/interfaces/shopInterface'
 import { H4, R14 } from '@/src/components/Elements/FontStyles';
 import { colors } from '@/src/constants/colors';
+import ShopProductCard from '@/src/components/UI/ShopProductCard';
 
 const CheckoutMedthod = ({ shopProducts, index, note }: { shopProducts: ShopProduct[], index: any, note: string }) => {
   return (
@@ -47,8 +48,6 @@ const Cart = () => {
   const shopOrderItems = useAppSelector(state => state.shop.shopOrderItems)
   const { t } = useTranslation("shop")
 
-  console.log("shopOrderItems", shopOrderItems)
-
   return (
     <View style={tw`bg-white flex-1`}>
       <ScrollView style={tw`max-w-5xl px-2`}>
@@ -60,18 +59,11 @@ const Cart = () => {
           </View>
           :
           <View style={tw`flex-col flex-nowrap p-2`}>
-            {Object.values(shopOrderItems)?.map((orderItemsValues: any, index: number) => {
-              const shopProducts: ShopProduct[] = Object.values(orderItemsValues)
-              console.log("shopProducts", shopProducts)
-              const services = shopProducts.filter((item: ShopProduct) => item.item?.need_shipping === 0)
-              const pickups = shopProducts.filter((item: ShopProduct) => item.item?.need_shipping === 1 && item.item.pickup_or_delivery === 1)
-              const deliveries = shopProducts.filter((item: ShopProduct) => item.item?.need_shipping === 1 && item.item.pickup_or_delivery === 2)
+            {Object.values(shopOrderItems)?.map((shopOrderItem: any, index: number) => {
+              const product: ShopProduct[] = shopOrderItem.item
               return (
                 <View style={tw``} key={index}>
-                  <CheckoutMedthod shopProducts={shopProducts} index={index} note="Delivery only" />
-                  {/* {!!deliveries?.length && <CheckoutMedthod shopProducts={deliveries} index={index} note={t('Delivery only')} />}
-                  {!!pickups?.length && <CheckoutMedthod shopProducts={pickups} index={index} note={t('Pickup only')} />} */}
-                  {/* {!!services?.length && <CheckoutMedthod shopProducts={services} index={index} note={t('Service digital product')} />} */}
+                  <ShopProductCard product={product}/>
                 </View>
               )
             })}

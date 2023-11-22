@@ -1,104 +1,116 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
 import { setShopOrderItems } from '@/src/redux/slice/shopSlice'
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Icon_DashLg, Icon_Dash_Circle, Icon_PlusCircle, Icon_PlusLg } from '../Elements/Icons';
+import { Image, Text, View } from 'react-native';
+import { Icon_DashLg, Icon_PlusLg } from '../Elements/Icons';
 import tw from 'twrnc';
 import PressableOpacity from '../Elements/PressableOpacity';
 import { colors } from '@/src/constants/colors';
 import { HOST_URL } from '@/env';
 import NumKeyboard from './NumKeyboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProductModal from './ProductModal';
 
 const ShopProductCard = ({ product }: any) => {
 
   const { t, i18n } = useTranslation();
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(product.quantity || 0);
   const shopOrderItems = useAppSelector(state => state.shop.shopOrderItems)
   const dispatch = useAppDispatch()
   const [openKeyboard, setOpenKeyboard] = useState<boolean>(false)
+  const [openProduct, setOpenProduct] = useState<boolean>(false)
 
-  const addItem = async (plusOrMinus: number, quantity: number) => {
-    const shopId: any = product?.shop.id
+  const handleItems = (plusOrMinus: number, quantity: number) => {
     const itemId: any = product?.id
-    let newOrder: any = {
-      [shopId]: {
-        [itemId]: {
-          item: product,
-          has_attributes: 0,
-          quantity: 1,
-          shop: product?.shop,
-          chosenSpecs: { quantity: 0 }
-        },
-      }
+    let newItem: any = {
+      [itemId]: {
+        item: product,
+        quantity: 1,
+        shop: product?.shop,
+      },
     }
 
-    let orderCopy = JSON.parse(JSON.stringify(shopOrderItems))
+    let shopOrderItemsCopy = JSON.parse(JSON.stringify(shopOrderItems))
     //if cart is not empty
-    if (Object.keys(shopOrderItems)[0]) {
-      // check if shop exists
-      const shopKeys = Object.keys(shopOrderItems)
-      if (shopKeys.includes(product?.shop.id + "")) {
+    if (Object.keys(shopOrderItemsCopy)[0]) {
 
-        const itemKeys: any = Object.keys(shopOrderItems[product?.shop?.id + ""])
+      // check if item exists in the cart
+      const itemKeys = Object.keys(shopOrderItemsCopy)
 
-        // check if same item exists
+      // Check if same item exists. 
+      // if items exists in cart:
+      if (itemKeys?.[0]) {
+        // if same item exists in cart:
         if (itemKeys.includes(product?.id + "")) {
-
           //remove item or shop if empty
           if (quantity === 0) {
-            delete orderCopy[product?.shop?.id + ""][product?.id + ""]
-            if (!Object.keys(orderCopy[product?.shop?.id + ""]).length) {
-              delete orderCopy[product?.shop?.id + ""]
-            }
-            dispatch(setShopOrderItems(orderCopy))
-            return
+            delete shopOrderItemsCopy[product?.id + ""]
+            setQty(0)
+            return shopOrderItemsCopy
           }
-          orderCopy[product?.shop?.id + ""][product?.id + ""].quantity = +orderCopy[product?.shop?.id + ""][product?.id + ""].quantity + plusOrMinus
-          dispatch(setShopOrderItems(orderCopy))
-
+          // quanity > 0, update quanity of that item
+          shopOrderItemsCopy[product?.id + ""].quantity = +shopOrderItemsCopy[product?.id + ""].quantity + (+plusOrMinus)
+          setQty(+shopOrderItemsCopy[product?.id + ""].quantity + (+plusOrMinus))
+          return shopOrderItemsCopy
         }
-        //shop found. item not found. add item to the shop
         else {
-
-          orderCopy[product?.shop?.id + ""][product?.id + ""] = newOrder[product?.shop?.id + ""][product?.id + ""]
-          dispatch(setShopOrderItems(orderCopy))
+          // new item not exists, add item to existing cart
+          shopOrderItemsCopy = { ...shopOrderItemsCopy, ...newItem }
+          return shopOrderItemsCopy
         }
       }
-      //shop not found. add newOrder
-      else {
-
-        orderCopy[product?.shop?.id + ""] = newOrder[product?.shop?.id + ""]
-        dispatch(setShopOrderItems(orderCopy))
-      }
     }
+    //cart empty. add item to cart
     else {
-      //shop not found. add newOrder
-
-      dispatch(setShopOrderItems(newOrder))
+      return newItem
     }
+  }
 
-    await AsyncStorage.setItem("createdShopOrder", JSON.stringify(""))
-
+  const addItem = async (plusOrMinus: number, quantity: number) => {
+    const handledItems = handleItems(plusOrMinus, quantity)
+    dispatch(setShopOrderItems(handledItems))
+    await AsyncStorage.setItem("shopOrderItems", JSON.stringify(handledItems))
   };
 
+  const keyboardUpdateQty = async (newQty: number) => {
+    let shopOrderItemsCopy = JSON.parse(JSON.stringify(shopOrderItems))
+    if (!newQty) {
+      delete shopOrderItemsCopy[product?.id + ""]
+    }
+    else {
+      shopOrderItemsCopy[product?.id + ""].quantity = newQty
+    }
+    dispatch(setShopOrderItems(shopOrderItemsCopy))
+    await AsyncStorage.setItem("shopOrderItems", JSON.stringify(shopOrderItemsCopy))
+  }
+
+  const memoizedQty = useMemo(() => {
+    return shopOrderItems?.[product?.id || 0]?.quantity || 0;
+  }, [shopOrderItems, product]);
+
   useEffect(() => {
-    setQty(shopOrderItems?.[product.shop.id]?.[product?.id || 0]?.quantity || 0)
-  }, [])
+    setQty(memoizedQty);
+  }, [memoizedQty]);
 
   return (
     <>
       <NumKeyboard
         open={openKeyboard}
         setOpen={setOpenKeyboard}
-        setQty={setQty}
         qty={qty}
+        keyboardUpdateQty={keyboardUpdateQty}
+      />
+
+      <ProductModal
+        item={product}
+        open={openProduct}
+        setOpen={setOpenProduct}
       />
 
       <PressableOpacity style={tw`w-full h-[70px] flex flex-row items-center rounded bg-white mb-2 p-2`}
-        onPress={() => router.push("/shop/product/" + product.id)}>
+        onPress={() => setOpenProduct(true)} >
 
         {product?.images && <Image source={{ uri: HOST_URL + '/storage/' + JSON.parse((product?.images || " ") + "")[0] }}
           style={tw`w-[60px] h-[60px]`}
@@ -154,9 +166,9 @@ const ShopProductCard = ({ product }: any) => {
           </View>
         </View>
 
-      </PressableOpacity>
+      </PressableOpacity >
     </>
   )
 }
 
-export default ShopProductCard
+export default React.memo(ShopProductCard)

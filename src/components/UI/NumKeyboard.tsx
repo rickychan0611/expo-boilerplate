@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react';
 import { View, Modal, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import tw from "twrnc"
 
-function NumKeyboard({ open, setOpen, setQty, qty, addItem }: any) {
+function NumKeyboard({ open, setOpen, qty, keyboardUpdateQty }: any) {
 
   const [num, setNum] = useState<string>(qty + "")
 
   const handleKeyPress = (key: string) => {
     if (key === 'backspace') {
       num.length && setNum((prevNumber: string) => prevNumber.slice(0, -1));
-    } else if (key === 'cancel') {
+    } else if (key === 'clear') {
       setNum('');
+    } else if (key === 'cancel') {
+      setOpen(false);
     } else if (key === 'done') {
-      setQty(+num)
       setOpen(false)
-      addItem(+num || 0, +num || 0)
+      keyboardUpdateQty(+num)
     } else {
       if (key === '0' && num === "" || num.length === 6) return
       setNum((prevNumber: string) => prevNumber + key);
@@ -73,7 +74,7 @@ function NumKeyboard({ open, setOpen, setQty, qty, addItem }: any) {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => handleKeyPress('cancel')} style={styles.key}>
+            <TouchableOpacity onPress={() => handleKeyPress('clear')} style={styles.key}>
               <Text>Clear</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleKeyPress('0')} style={styles.key}>
@@ -83,9 +84,18 @@ function NumKeyboard({ open, setOpen, setQty, qty, addItem }: any) {
               <Text>←</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => handleKeyPress('done')} style={styles.doneButton}>
-            <Text>DONE</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity onPress={() => handleKeyPress('cancel')} style={[styles.key]}>
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+            {num ? <TouchableOpacity onPress={() => handleKeyPress('done')} style={[styles.key]}>
+              <Text>{"DONE"}</Text>
+            </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={() => handleKeyPress('done')} style={[styles.key, tw`bg-red-500`]}>
+                <Text style={tw`text-white`}>{"REMOVE"}</Text>
+              </TouchableOpacity>}
+          </View>
         </View>
       </View>
     </Modal>
