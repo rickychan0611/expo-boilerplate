@@ -109,11 +109,11 @@ const ShopProductCard = ({ product }: any) => {
         setOpen={setOpenProduct}
       />
 
-      <PressableOpacity style={tw`w-full h-[70px] flex flex-row items-center rounded bg-white mb-2 p-2`}
+      <PressableOpacity style={tw`w-full  flex flex-row items-center rounded bg-white mb-2 p-2`}
         onPress={() => setOpenProduct(true)} >
 
         {product?.images && <Image source={{ uri: HOST_URL + '/storage/' + JSON.parse((product?.images || " ") + "")[0] }}
-          style={tw`w-[60px] h-[60px] rounded`}
+          style={tw`w-[70px] h-[70px] rounded`}
           resizeMode="cover"
         />}
 
@@ -171,4 +171,4 @@ const ShopProductCard = ({ product }: any) => {
   )
 }
 
-export default React.memo(ShopProductCard)
+export default ShopProductCard
