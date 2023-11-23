@@ -56,22 +56,22 @@ export default function AppLayout() {
     return (
       <Tabs screenOptions={{ headerShown: false }}>
         <Tabs.Screen
-          name="categories"
-          options={{
-            tabBarLabel: t`Categories`,
-            tabBarActiveTintColor: colors.primary,
-            tabBarIcon: ({ color, size }) => (
-              <CategoryIcon fill={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="index"
           options={{
             tabBarLabel: t`Recent`,
             tabBarActiveTintColor: colors.primary,
             tabBarIcon: ({ color, size }) => (
               <HistoryIcon fill={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="categories"
+          options={{
+            tabBarLabel: t`Categories`,
+            tabBarActiveTintColor: colors.primary,
+            tabBarIcon: ({ color, size }) => (
+              <CategoryIcon fill={color} />
             ),
           }}
         />

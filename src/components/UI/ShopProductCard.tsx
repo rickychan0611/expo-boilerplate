@@ -12,6 +12,7 @@ import { HOST_URL } from '@/env';
 import NumKeyboard from './NumKeyboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProductModal from './ProductModal';
+import { M16, M18 } from '../Elements/FontStyles';
 
 const ShopProductCard = ({ product }: any) => {
 
@@ -113,15 +114,18 @@ const ShopProductCard = ({ product }: any) => {
         onPress={() => setOpenProduct(true)} >
 
         {product?.images && <Image source={{ uri: HOST_URL + '/storage/' + JSON.parse((product?.images || " ") + "")[0] }}
-          style={tw`w-[70px] h-[70px] rounded`}
+          style={tw`w-[80px] h-[80px] rounded`}
           resizeMode="cover"
         />}
 
-        <View style={tw`flex-1`}>
-          <Text style={tw`font-bold px-2`} numberOfLines={1}>
+        <View style={tw`flex-1 flex-col justify-between`}>
+
+          <M16 style={tw`font-bold px-2`} numberOfLines={2}>
             {i18n.language === "cn" ? product.name_cn : product.name_en}
-          </Text>
-          <View style={tw`flex-1 flex-row ml-2`}>
+          </M16>
+
+          <View style={tw`flex-1 flex-row ml-2 justify-end items-end`}>
+
             <View style={tw`flex-1`}>
               <Text style={tw`leading-5 text-stone-500`} numberOfLines={1}>
                 Unit: 1lbs
@@ -130,6 +134,8 @@ const ShopProductCard = ({ product }: any) => {
                 ${product.price ? product.price : product.price_range}
               </Text>
             </View>
+
+            {/* qty buttons */}
             <View style={tw`w-[80px] flex-row justify-end items-center gap-2 mt-4`}>
               {qty > 0 ?
                 <>
@@ -141,7 +147,7 @@ const ShopProductCard = ({ product }: any) => {
                         addItem(-1, qty - 1)
                       }
                     }}>
-                    <Icon_DashLg fill="white" width={10} height={10} />
+                    <Icon_DashLg fill="white" width={14} height={14} />
                   </PressableOpacity>
 
                   <PressableOpacity style={tw`justify-center items-center border rounded border-gray-400 min-w-[50px] p-0.5`}
@@ -160,9 +166,10 @@ const ShopProductCard = ({ product }: any) => {
                   setQty(qty + 1)
                   addItem(1, qty + 1)
                 }}>
-                <Icon_PlusLg fill="white" width={10} height={10} />
+                <Icon_PlusLg fill="white" width={14} height={14} />
               </PressableOpacity>
             </View>
+
           </View>
         </View>
 

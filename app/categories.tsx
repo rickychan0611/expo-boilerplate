@@ -1,29 +1,30 @@
 import { shopAPI } from '@/src/api/shopAPI';
-import LoadingModal from '@/src/components/UI/LoadingModal';
-import { M18, R14, R18 } from '@/src/components/Elements/FontStyles';
-import { Product } from '@/src/interfaces/shopInterface';
+import { R14 } from '@/src/components/Elements/FontStyles';
 import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
-import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Button, Image, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import tw from 'twrnc';
 import ShopProductCard from '@/src/components/UI/ShopProductCard';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { colors } from '@/src/constants/colors';
+import { useSharedValue } from 'react-native-reanimated';
+import CatBarHorizontal from '@/src/components/UI/CatBarHorizontal';
+import CatBarVertical from '@/src/components/UI/CatBarVertical';
+import { Text, View } from 'react-native';
 
-import ChickenIcon from '@/assets/cat_icons/chicken.png'
+export default function Categories() {
 
-export default function Root() {
-
-  const { t, i18n } = useTranslation();
-  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>([])
-  const shopOrderItems = useAppSelector(state => state.shop.shopOrderItems)
   const [isLastPage, setIsLastPage] = useState(false);
   const [page, setPage] = useState(1);
+  const [cat, setCat] = useState<any>([])
 
+  const getAllCats = async (): Promise<any> => {
+    const res = await shopAPI.getAllCats()
+    console.log("getAllCats", res.data.categories)
+    setCat(res.data.categories)
+  }
+  
   const getData = async (page: number, min_price: number, max_price: number | string, orderby: string | undefined, task: string) => {
     try {
       if (isLastPage && task !== "refresh") return
@@ -58,14 +59,6 @@ export default function Root() {
   }, [])
 
 
-  const [cat, setCat] = useState<any>([])
-
-  const getAllCats = async (): Promise<any> => {
-    const res = await shopAPI.getAllCats()
-    console.log("getAllCats", res.data.categories)
-    setCat(res.data.categories)
-  }
-
   useEffect(() => {
     (async () => {
       if (!cat.length) {
@@ -74,72 +67,25 @@ export default function Root() {
     })()
   }, [])
 
-  const [openCat, setOpenCat] = useState<boolean>(false)
-  const catBarHeight = openCat ? 200 : 100
   const [selectedCat, setSelectedCat] = useState<any>("Chicken")
-
-  // ${openCat ? "absolute" : "h-[${catBarHeight}px]"} 
-  const CatBarHorizontal = () => {
-    return (
-      <ScrollView style={tw`flex-row z-50 p-2 py-4 mb-2 bg-white w-full`}
-        horizontal
-      >
-        {cat?.[0] && cat?.map((item: any, i: number) => {
-          return (
-            <TouchableOpacity key={i} style={tw`mr-4 justify-center items-center`}>
-              <View style={tw`w-[54px] h-[54px] bg-[#F2EAE8] rounded-full mb-2 justify-center items-center`}>
-                <Image source={ChickenIcon} style={tw`w-[28px] h-[28px] `} />
-              </View>
-              <R14 style={tw``}>{i18n.language === "cn" ? item.category_name_cn : item.category_name_en}</R14>
-            </TouchableOpacity>
-          )
-        })}
-        <View style={tw`w-8 h-5`} />
-      </ScrollView>
-    )
-  }
-
-  const CatBarVertical = () => {
-    return (
-      <View style={tw`bg-white`}>
-        <M18 style={tw`pt-4 px-4`}>产品类目</M18>
-        <View style={tw`flex-row flex-wrap justify-center z-50 p-2 py-2 mb-2 bg-white w-full`}>
-          {cat?.[0] && cat?.map((item: any, i: number) => {
-            return (
-              <TouchableOpacity key={i} style={tw`mx-2 justify-center items-center my-2`}>
-                <View style={tw`w-[54px] h-[54px] bg-[#F2EAE8] rounded-full mb-2 justify-center items-center`}>
-                  <Image source={ChickenIcon} style={tw`w-[28px] h-[28px] `} />
-                </View>
-                <R14 style={tw``}>{i18n.language === "cn" ? item.category_name_cn : item.category_name_en}</R14>
-              </TouchableOpacity>
-            )
-          })}
-        </View>
-        <View style={tw`flex-1 h-[5px] bg-stone-100`}></View>
-
-        <View style={tw`flex-row items-center py-6 px-2`}>
-          <M18 style={tw`mr-4`}>{selectedCat}</M18>
-          <View style={tw`flex-1 h-[5px] bg-[${colors.primary}]`}></View>
-        </View>
-      </View>
-    )
-  }
+  const scrollY = useSharedValue(0)
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   return (
     <>
       {/* <LoadingModal loading={loading} /> */}
-
+      <CatBarHorizontal headerHeight={headerHeight} cat={cat} selectedCat={selectedCat} setSelectedCat={setSelectedCat} scrollY={scrollY} />
       <View style={tw`flex-1 `}>
 
         <MasonryList
           data={data || []}
           renderItem={({ item }: { item: any }) => (
-            // <View style={tw`px-2`}>
+            <View style={tw`px-2`}>
               <ShopProductCard product={item} />
-            // </View>
+            </View>
           )}
           removeClippedSubviews={true}
-          ListHeaderComponent={<CatBarVertical />}
+          ListHeaderComponent={<CatBarVertical setHeaderHeight={setHeaderHeight} cat={cat} selectedCat={selectedCat} setSelectedCat={setSelectedCat} />}
           keyExtractor={(item: any) => item.id + ""}
           numColumns={1}
           contentContainerStyle={{
@@ -176,6 +122,9 @@ export default function Root() {
                 <View style={tw`border-b border-[${colors.neutral80}] h-1 flex-1 ml-3`} />
               </View>
             }</>}
+          onScroll={(e) => {
+            scrollY.value = e.nativeEvent.contentOffset.y
+          }}
         />
       </View>
     </>
